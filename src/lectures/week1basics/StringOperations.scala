@@ -13,7 +13,8 @@ object StringOperations extends App {
   println(aString.toUpperCase) // выводит HELLO, WORLD!
   println("abcd".reverse) // выводит dcba
   println("abcd".take(2)) // выводит ab
-
+  println("abcd".indexOf('b'))
+  println("-------")
 
   val aNumber = "42".toInt
   println(aNumber) // выводит 42
@@ -30,4 +31,6 @@ object StringOperations extends App {
   val surname = "Smith"
 
   println(s"Hello, ${name + surname}") // выводит Hello, JohnSmith
+
+  println(f"Пи до четвертого знака после запятой ${math.Pi}%.4f")
 }

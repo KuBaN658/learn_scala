@@ -1,7 +1,7 @@
 package lectures.week2oop
 
 object Inharitance extends App{
-  val student = new Stdnt("Aleks", 34, 1, "male")
+  val student = new Studnt("Aleks", 34, 1, "male")
   println(student.greet)
 }
 
@@ -11,7 +11,7 @@ class Prsn(name: String, age: Int) {
   def greet: String = "Hello"
 }
 // переопределение в конструкторе
-class Stdnt(name: String, age: Int, id: Int,
+class Studnt(name: String, age: Int, id: Int,
             override val gender: String) extends Prsn {
   //
   override def greet: String = s"${super.greet}, $name"
@@ -38,7 +38,7 @@ class Stdnt(name: String, age: Int, id: Int,
     def showNotification: String
 
   trait PrivateConn
-    def checkCredentials: Boolean
+    def checkCredentials: Boolean = false
 
   class SomeDataSource(ds: String) extends PublicConn with PrivateConn:
     def showNotification: String = "notification"

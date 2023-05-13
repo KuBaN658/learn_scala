@@ -12,4 +12,5 @@ object expressions extends App {
  val someVal: Unit
  = print("It is just a value")
  println(someVal)
+ 
 }

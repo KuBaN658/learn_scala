@@ -14,6 +14,7 @@ object StringOperations extends App {
   println("abcd".reverse) // выводит dcba
   println("abcd".take(2)) // выводит ab
   println("abcd".indexOf('b'))
+  println("abcd".diff("cda")) // те элементы которых нет во второй строке, а есть в первой
   println("-------")
 
   val aNumber = "42".toInt

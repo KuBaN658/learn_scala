@@ -25,9 +25,25 @@ object Solution extends App {
       else if (num % 2 == 0) nos(num / 2, count + 1)
       else nos(num - 1, count + 1)
     }
+
     nos(num)
   }
-  println(numberOfSteps(8))
+
+  // Definition for singly-linked list.
+  class ListNode(_x: Int = 0, _next: ListNode = null) {
+    var next: ListNode = _next
+    var x: Int = _x
+  }
+
+
+
+    def middleNode(head: ListNode): ListNode =
+      @scala.annotation.tailrec
+      def run(slow: ListNode, fast: ListNode): ListNode =
+        if (fast == null || fast.next == null) slow
+        else run(slow.next, fast.next.next)
+
+      run(head, head)
+
+
 }
-
-

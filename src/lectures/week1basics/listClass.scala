@@ -55,6 +55,7 @@ object listClass extends App {
   println(list.reverse) // возвращает список в обратном порядке
 
   println(list.sortWith((a, b) => a > b)) // возвращает отсортированный список
+  println(list.sortWith(_ > _))
 
 
 }

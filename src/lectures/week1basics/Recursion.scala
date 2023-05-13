@@ -54,4 +54,5 @@ object Recursion extends App{
   println(phrase.split(" ")
     .toList.filterNot(word => word.isEmpty)
     .reverse.mkString(" "))
+
 }

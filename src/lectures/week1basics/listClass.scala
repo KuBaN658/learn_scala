@@ -57,5 +57,9 @@ object listClass extends App {
   println(list.sortWith((a, b) => a > b)) // возвращает отсортированный список
   println(list.sortWith(_ > _))
 
+  println(list.find(_ == 2))
+
+  println(list.takeWhile(_ < 3))
+
 
 }

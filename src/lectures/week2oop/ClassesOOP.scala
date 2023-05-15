@@ -16,5 +16,11 @@ class Student(id: Int, name: String) {
 
   def getId: String = s"here is ${this.name}'s ID ${this.id}"
 
+  extension (s: String)
+    def makeInt(radix: Int): Int = Integer.parseInt(s, radix)
+
+  "1".makeInt(2) // Int = 1
+  "10".makeInt(2) // Int = 2
+  "100".makeInt(2)
 }
 

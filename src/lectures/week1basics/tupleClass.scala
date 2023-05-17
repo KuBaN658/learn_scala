@@ -6,4 +6,10 @@ object tupleClass extends App {
 
   println(pair(0))
   println(pair(1))
+
+  // распаковка
+  val (num, str) = pair
+
+  println(pair)
+  println(str)
 }

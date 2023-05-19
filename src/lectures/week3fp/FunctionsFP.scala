@@ -69,4 +69,34 @@ object FunctionsFP extends App {
 
   val func = someFunc(1)
   println(func)
+
+  val whatToDo = (d: String) => d match {
+    case "mon" => "Work!"
+    case "fri" => "Party Time"
+    case "sun" => "Relax a little"
+
+  }
+    val aPartialFunction: PartialFunction[String, String] = {
+      case "mon" => "Work!"
+      case "fri" => "Party Time"
+      case "sun" => "Relax a little"
+    }
+
+  println(aPartialFunction("sun"))
+  // println(aPartialFunction("sat")) // MatchError
+
+  println(aPartialFunction.isDefinedAt("tue"))
+
+  val pfChain: PartialFunction[String, String] = aPartialFunction.orElse[String, String] {
+    case "sat" => "It's just Saturday"
+  }
+
+  println(pfChain("mon"))
+  println(pfChain("sat"))
+
+
+  val lifted = aPartialFunction.lift // теперь на выходе имеем тип Option[String]
+
+  println(lifted("fri")) // Some(Party Time)
+  println(lifted("thu")) // None
 }

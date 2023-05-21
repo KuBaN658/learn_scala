@@ -8,3 +8,7 @@ for
   n <- list1
   c <- list2
 yield n + c
+
+
+val lst = List((1, 2), (3, 4))
+lst.flatMap((a, b) => (a, b))

@@ -10,3 +10,10 @@ chatbot("by")
 
 
 scala.io.Source.stdin.getLines()
+
+val x = 5
+val y = {
+  val x = 7
+  x + 3
+}
+println(x + "," + y)

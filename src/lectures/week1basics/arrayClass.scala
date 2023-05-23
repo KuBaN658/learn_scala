@@ -19,5 +19,4 @@ object arrayClass extends App {
   println(greetStrings.sameElements(numNames))
   println(copy.sameElements(numNames))
 
-
 }

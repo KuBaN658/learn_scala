@@ -78,40 +78,59 @@ object tree extends App {
             case _ => Map(key.leftChild -> (value + key.leftChild.value), key.rightChild -> (value + key.rightChild.value))
           })
 
-        if (! acc.filter((key, value) => key.isLeaf && value == target).isEmpty) true
+        if (acc.filter((key, value) => key.isLeaf && value == target).nonEmpty) true
         else if (nAcc.isEmpty) false
         else loop(nAcc)
       }
       if (tree.isEmpty) false
       else loop()
     }
+
+    def findAllPaths(tree: BinaryTree[String], target: String): List[List[String]] = {
+      @tailrec
+      def loop(acc: Map[BinaryTree[String], Tuple2[Int, List[String]]] =
+               Map(tree -> Tuple2(tree.value.toInt, List(tree.value))), accRes: List[List[String]] = List()): List[List[String]] = {
+        val nAcc = acc.filterNot(elem => elem._1.isLeaf).flatMap(elem => elem match {
+          case (key:BinaryTree[String], value: Tuple2[Int, List[String]]) if key.leftChild.isEmpty =>
+            Map(key.rightChild -> Tuple2(value._1 + key.rightChild.value.toInt, value._2 ++ List(key.rightChild.value)))
+          case (key:BinaryTree[String], value: Tuple2[Int, List[String]]) if key.rightChild.isEmpty =>
+            Map(key.leftChild -> Tuple2(value._1 + key.leftChild.value.toInt, value._2 ++ List(key.leftChild.value)))
+          case (key:BinaryTree[String], value: Tuple2[Int, List[String]]) =>
+            Map(key.rightChild -> Tuple2(value._1 + key.rightChild.value.toInt, value._2 ++ List(key.rightChild.value)),
+                key.leftChild -> Tuple2(value._1 + key.leftChild.value.toInt, value._2 ++ List(key.leftChild.value)))
+        })
+          val lstPth = acc.toList.filter(elem => elem match {
+            case (key:BinaryTree[String], value: Tuple2[Int, List[String]]) if key.isLeaf && value._1 == target.toInt =>
+              true
+            case _ => false
+          }).map(elem => elem._2._2)
+        println(f"acc = $acc\nnAcc = $nAcc\nlstPth = $lstPth\naccRes = $accRes")
+        if (nAcc.forall(elem => elem._1.isEmpty)) lstPth ++ accRes
+        else loop(nAcc, lstPth ++ accRes)
+      }
+      if (tree.isEmpty) List()
+      else loop()
+    }
   }
 
-  val tree = Node(1,
-    Node(2,
-      Node(4,
+  val tree = Node("1",
+    Node("12",
+      Node("4",
         TreeEnd,
-        TreeEnd),
-      Node(5,
-        TreeEnd,
-        Node(8,
+        Node("8",
           TreeEnd,
-          TreeEnd))),
-    Node(3,
-      Node(6,
+          TreeEnd)),
+      Node("5",
+        TreeEnd,
+        TreeEnd)),
+    Node("3",
+      Node("6",
         TreeEnd,
         TreeEnd),
-      Node(7,
+      Node("7",
         TreeEnd,
-        TreeEnd)))
+        TreeEnd))
+  )
 
-  println(Map(tree -> tree.value, Node(5, TreeEnd, Node(8, TreeEnd, TreeEnd)) -> 5)
-    .filterNot((key: BinaryTree[Int], value: Int) => key.isLeaf)
-    .flatMap((key, value) => (key, value) match {
-      case (key, value) if key.leftChild.isEmpty => Map(key.rightChild -> (value + key.rightChild.value))
-      case (key, value) if key.rightChild.isEmpty => Map(key.leftChild -> (value + key.leftChild.value))
-      case _ => Map(key.leftChild -> (value + key.leftChild.value), key.rightChild -> (value + key.rightChild.value))
-    }))
-
-  println(tree.hasPath(TreeEnd, 1))
+  println(tree.findAllPaths(tree, "25"))
 }

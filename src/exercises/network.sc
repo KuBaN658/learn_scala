@@ -20,7 +20,6 @@ def connect(network: Map[String, Set[String]], PointA: String, PointB: String): 
   network + (PointA -> (network(PointA) + PointB)) + (PointB -> (network(PointB) + PointA))
 }
 
-
 def nFlights(network: Map[String, Set[String]], location: String): Int = {
   network(location).size
 }

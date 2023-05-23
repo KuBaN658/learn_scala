@@ -33,3 +33,6 @@ nums.sorted
 nums.sortWith(_ < _)
 nums.sortWith(_ > _)
 
+val lst = List(List(3, 5, 6), List(3, 2, 1))
+lst.sorted
+

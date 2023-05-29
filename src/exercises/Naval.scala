@@ -1,5 +1,7 @@
 package exercises
 
+import sun.security.util.Length
+
 object Naval extends App{
 
   type Point = (Int, Int)
@@ -7,25 +9,53 @@ object Naval extends App{
   type Fleet = Map[String, Ship]
   type Field = Vector[Vector[Boolean]]
   type Game = (Field, Fleet)
-  val field = (1 to 10).toVector.map(_ => (1 to 10).toVector.map(_ => false))
 
 
   import Naval.{Point, Field, Ship, Fleet, Game}
   import scala.io.StdIn
 
+
   val amount = StdIn.readInt()
-  val fleet: Fleet = Map(): Map[String, Ship]
-  for (i <- 0 until amount) {
-    val sh = StdIn.readLine().split(' ')
-    val lengthShip = sh(1).toInt
-    val ship: List[(Int, Int)] = {
-      for (i <- 1 to lengthShip) yield {
-        val data: String = StdIn.readLine()
-        (data(0).toString.toInt, data(2).toString.toInt)
+  val field = Vector.fill(10)(Vector.fill(10)(false))
+  val fleet: Fleet = Map()
+  val game = (field, fleet)
+  val data: List[(String, Ship)] = (for (_ <- 1 to amount) yield {
+    val shp = StdIn.readLine().split(" ")
+    val strShip: (String, Int) = (shp(0), shp(1).toInt)
+    val pointShip: List[Point] = (for (_ <- 1 to strShip._2) yield {
+      val coords = StdIn.readLine().split(" ").map(_.toInt)
+      (coords(0), coords(1))
+    }).toList
+    (strShip._1, pointShip)
+  }).toList
+
+  head(data, game)._2.foreach(x => println(x._1))
+
+  def head(dat: List[(String, Ship)], game: Game): Game = {
+    def loop(list: List[(String, Ship)], acc: Game): Game = {
+      if (list.isEmpty) acc
+      else loop(list.tail, tryAddShip(acc, list.head._1, list.head._2))
     }
-    }.toList
+    loop(dat, game)
   }
 
+  def readNameShip(): Tuple2[String, Int] = {
+    val data: Array[String] = StdIn.readLine().split(' ')
+    (data(0), data(1).toInt)
+  }
+  def readCoordShip(lengthShip: Int): Ship = {
+    def loop(length: Int, acc: List[(Int, Int)]): Ship =
+    {
+      if (length == 0) acc
+      else
+      {
+        val strCoords = StdIn.readLine().split(' ').map(_.toInt)
+        val coords = Tuple2(strCoords(0), strCoords(1))
+        loop(length - 1, acc :+ coords)
+      }
+    }
+    loop(lengthShip, List())
+  }
 
   def validateShip(ship: Ship): Boolean = {
     if (ship.map(x => x._1).distinct.size == 1 ||
@@ -35,16 +65,28 @@ object Naval extends App{
   } // определить, подходит ли корабль по своим характеристикам
 
   def validatePosition(ship: Ship, field: Field): Boolean = {
-    ship.map(x => x._1 < 10 && x._2 < 10 && x._1 >= 0 && x._2 >= 0).forall(_ == true)
-      //(ship.map(x => field.slice(x._1 - 1, x._1 + 2).map(_.slice(x._2 - 1, x._2 + 2)).forall(_.forall(y => y == false))))
+    ship.map(x => field.slice(x._1 - 1, x._1 + 2)
+      .map(y => y.slice(x._2 - 1, x._2 + 2))).flatten.flatten.forall(_ == false)
   } // определить, можно ли его поставить
 
-  def enrichFleet(fleet: Fleet, name: String, ship: Ship): Fleet = fleet // добавить корабль во флот
+  def enrichFleet(fleet: Fleet, name: String, ship: Ship): Fleet = {
+    // добавить корабль во флот
+    fleet + (name -> ship)
+  }
 
-  def markUsedCells(field: Field, ship: Ship): Field = field // пометить клетки, которые занимает добавляемый корабль
+  def markUsedCells(field: Field, ship: Ship): Field =  {
+    def loop(ship: Ship, acc: Field): Field = {
+      if (ship.isEmpty) acc
+      else loop(ship.tail, acc.updated(ship.head._1, acc(ship.head._1).updated(ship.head._2, true)))
+    }
+    loop(ship, field)
+  }
 
   def tryAddShip(game: Game, name: String, ship: Ship): Game = {
-    println(name)
-    game
+    if (validateShip(ship) && validatePosition(ship, game._1)) {
+      (markUsedCells(game._1, ship), enrichFleet(game._2, name, ship))
+    } else {
+      game
+    }
   } // логика вызовов методов выше
 }

@@ -2,6 +2,8 @@ package exercises
 
 import sun.security.util.Length
 
+import scala.annotation.tailrec
+
 object Naval extends App{
 
   type Point = (Int, Int)
@@ -32,6 +34,7 @@ object Naval extends App{
   head(data, game)._2.foreach(x => println(x._1))
 
   def head(dat: List[(String, Ship)], game: Game): Game = {
+    @tailrec
     def loop(list: List[(String, Ship)], acc: Game): Game = {
       if (list.isEmpty) acc
       else loop(list.tail, tryAddShip(acc, list.head._1, list.head._2))
@@ -44,6 +47,7 @@ object Naval extends App{
     (data(0), data(1).toInt)
   }
   def readCoordShip(lengthShip: Int): Ship = {
+    @tailrec
     def loop(length: Int, acc: List[(Int, Int)]): Ship =
     {
       if (length == 0) acc
@@ -75,6 +79,7 @@ object Naval extends App{
   }
 
   def markUsedCells(field: Field, ship: Ship): Field =  {
+    @tailrec
     def loop(ship: Ship, acc: Field): Field = {
       if (ship.isEmpty) acc
       else loop(ship.tail, acc.updated(ship.head._1, acc(ship.head._1).updated(ship.head._2, true)))
@@ -90,3 +95,4 @@ object Naval extends App{
     }
   } // логика вызовов методов выше
 }
+
